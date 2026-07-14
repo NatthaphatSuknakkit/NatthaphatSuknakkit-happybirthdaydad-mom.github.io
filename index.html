@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สุขสันต์วันเกิด คุณพ่อและคุณแม่</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#dff1fc;
+    --sky-mid:#c9e8f8;
+    --sky-deep:#5fa8d3;
+    --sky-deeper:#3d7ea6;
+    --cream:#fff8ec;
+    --gold:#f3c465;
+    --blush:#f6c9d2;
+    --text:#2c4356;
+    --text-soft:#4f6b80;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Sarabun', sans-serif;
+    color:var(--text);
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 45%, #eaf5fc 100%);
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  h1,h2,.display{ font-family:'Chonburi', cursive; font-weight:400; }
+
+  /* ---------- GATE (opening screen) ---------- */
+  #gate{
+    position:fixed; inset:0; z-index:100;
+    background:linear-gradient(180deg,#bfe3f7 0%, #dff1fc 60%, #f3f9fd 100%);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    transition:opacity 1s ease, visibility 1s ease;
+  }
+  #gate.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  .gate-cloud{
+    position:absolute; background:#fff; border-radius:50%;
+    opacity:.85; filter:blur(.3px);
+  }
+  .gate-cloud::before, .gate-cloud::after{
+    content:''; position:absolute; background:#fff; border-radius:50%;
+  }
+  .gate-title{
+    font-size:clamp(1.6rem, 5vw, 2.4rem);
+    color:var(--sky-deeper);
+    text-align:center;
+    margin-bottom:.6rem;
+    z-index:2;
+    text-shadow:0 2px 10px rgba(255,255,255,.8);
+  }
+  .gate-sub{
+    color:var(--text-soft); margin-bottom:2rem; z-index:2; font-size:1rem; text-align:center; padding:0 1.5rem;
+  }
+  #openBtn{
+    z-index:2;
+    background:var(--white);
+    border:2px solid var(--sky-deep);
+    color:var(--sky-deeper);
+    font-family:'Sarabun', sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+    padding:.9rem 2.2rem;
+    border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(80,150,190,.25);
+    display:flex; align-items:center; gap:.6rem;
+    animation:pulse 2.4s ease-in-out infinite;
+    transition:transform .2s ease;
+  }
+  #openBtn:hover{ transform:translateY(-2px) scale(1.03); }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 6px 18px rgba(80,150,190,.25); }
+    50%{ box-shadow:0 6px 26px rgba(80,150,190,.45); }
+  }
+  .gate-balloon{
+    position:absolute; bottom:-120px; width:34px; height:42px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation:floatUp linear infinite;
+    opacity:.9;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); }
+    50%{ transform:translateY(-60vh) translateX(20px) rotate(4deg); }
+    100%{ transform:translateY(-125vh) translateX(-10px) rotate(-4deg); }
+  }
+
+  /* ---------- MAIN CONTENT ---------- */
+  #main{ position:relative; }
+  .section{ position:relative; padding:5rem 1.5rem; max-width:920px; margin:0 auto; }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s ease; }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+
+  /* Hero */
+  #hero{ text-align:center; padding-top:4.5rem; min-height:78vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .eyebrow{
+    letter-spacing:.25em; text-transform:uppercase; font-size:.75rem;
+    color:var(--sky-deeper); margin-bottom:1rem; font-weight:600;
+  }
+  #hero h1{ font-size:clamp(2.2rem, 7vw, 4rem); color:var(--sky-deeper); line-height:1.3; margin-bottom:.8rem; }
+  #hero .names{ font-size:clamp(1.3rem,4vw,1.8rem); color:var(--text); margin-bottom:1.4rem; }
+  #hero p.desc{ max-width:480px; color:var(--text-soft); font-size:1.05rem; line-height:1.9; }
+  .hero-decor{ position:absolute; top:0; left:0; right:0; height:100%; overflow:hidden; pointer-events:none; z-index:0; }
+  .hero-balloon{ position:absolute; width:26px; height:34px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; opacity:.55; animation:sway 6s ease-in-out infinite; }
+  @keyframes sway{ 0%,100%{ transform:translateX(0) rotate(-2deg);} 50%{ transform:translateX(12px) rotate(2deg);} }
+  .cloud-drift{ position:absolute; background:#fff; opacity:.7; border-radius:50%; }
+  .cloud-drift::before, .cloud-drift::after{ content:''; position:absolute; background:#fff; border-radius:50%; }
+
+  /* Section headers */
+  .section-head{ text-align:center; margin-bottom:2.6rem; }
+  .section-head .eyebrow{ margin-bottom:.5rem; }
+  .section-head h2{ font-size:clamp(1.6rem,4vw,2.2rem); color:var(--sky-deeper); }
+
+  /* Gallery */
+  .gallery{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .frame{
+    aspect-ratio:1/1; border-radius:18px; position:relative; overflow:hidden;
+    background:linear-gradient(135deg, var(--white), #eef7fc);
+    border:2px dashed #a9d3ea;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:.4rem;
+    color:#7fa7be; font-size:.82rem; text-align:center; padding:.8rem;
+  }
+  .frame span.icon{ font-size:1.6rem; }
+  .frame.big{ grid-column:span 2; grid-row:span 2; }
+  .frame img, .frame video{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0; display:none; }
+  /* If you add a real photo, put its <img> tag inside the .frame div (see comment at bottom of file) and it will fill the frame automatically. */
+
+  /* Wish card */
+  .wish-card{
+    background:var(--white);
+    border-radius:26px;
+    padding:2.6rem 2.2rem;
+    position:relative;
+    box-shadow:0 20px 50px rgba(90,150,190,.15);
+    border:1px solid #e3f1f9;
+  }
+  .wish-card::before{
+    content:'"'; position:absolute; top:-10px; left:26px; font-family:'Chonburi',cursive;
+    font-size:5rem; color:var(--blush); line-height:1;
+  }
+  .wish-text{ font-size:1.08rem; line-height:2.1; color:var(--text); white-space:pre-line; }
+  .wish-sign{ margin-top:1.6rem; text-align:right; color:var(--sky-deeper); font-family:'Chonburi',cursive; font-size:1.2rem; }
+
+  /* Cake / candle interactive */
+  #cakeSection{ text-align:center; }
+  .cake-wrap{ display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
+  .cake-svg-holder{ width:220px; }
+  .flame{ transform-origin:50% 100%; animation:flicker 1.4s ease-in-out infinite; }
+  @keyframes flicker{ 0%,100%{ transform:scaleY(1) scaleX(1);} 50%{ transform:scaleY(1.15) scaleX(.9);} }
+  .flame.out{ animation:none; opacity:0; }
+  #blowBtn{
+    background:var(--sky-deep); color:#fff; border:none; padding:.85rem 2rem; border-radius:50px;
+    font-family:'Sarabun',sans-serif; font-weight:600; cursor:pointer; font-size:1rem;
+    box-shadow:0 10px 22px rgba(80,150,190,.3); transition:transform .2s ease;
+  }
+  #blowBtn:hover{ transform:translateY(-2px); }
+  #wishResult{ font-size:1.15rem; color:var(--sky-deeper); font-family:'Chonburi',cursive; opacity:0; transition:opacity .8s ease; min-height:2rem;}
+  #wishResult.show{ opacity:1; }
+
+  /* Footer */
+  footer{ text-align:center; padding:3rem 1.5rem 4rem; color:var(--text-soft); font-size:.92rem; }
+  footer .heart{ color:var(--blush); }
+
+  /* Music toggle */
+  #musicToggle{
+    position:fixed; bottom:22px; right:22px; z-index:50;
+    width:52px; height:52px; border-radius:50%; border:none;
+    background:var(--white); box-shadow:0 8px 20px rgba(80,150,190,.3);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  #musicToggle svg{ width:24px; height:24px; }
+  #musicToggle .bar{ animation:eq 1s ease-in-out infinite; }
+  #musicToggle.paused .bar{ animation-play-state:paused; }
+  @keyframes eq{ 0%,100%{ transform:scaleY(1);} 50%{ transform:scaleY(.4);} }
+
+  /* Confetti */
+  .confetti-piece{ position:fixed; top:-20px; z-index:60; pointer-events:none; border-radius:2px; }
+
+  @media(max-width:640px){
+    .gallery{ grid-template-columns:repeat(2,1fr); }
+    .frame.big{ grid-column:span 2; grid-row:span 1; aspect-ratio:2/1; }
+    .section{ padding:3.4rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ GATE / OPENING SCREEN ============ -->
+<div id="gate">
+  <div class="gate-cloud" style="width:140px;height:44px;top:14%;left:8%;"></div>
+  <div class="gate-cloud" style="width:100px;height:34px;top:70%;right:10%;"></div>
+  <div class="gate-cloud" style="width:80px;height:28px;top:20%;right:14%;"></div>
+  <div class="gate-balloon" style="left:15%; background:#f6c9d2; animation-duration:9s;"></div>
+  <div class="gate-balloon" style="left:75%; background:#f3c465; animation-duration:11s; animation-delay:1.5s;"></div>
+  <div class="gate-balloon" style="left:45%; background:#a9d3ea; animation-duration:10s; animation-delay:3s;"></div>
+
+  <div class="gate-title display">HAPPY BIRTHDAY🎈</div>
+  <div class="gate-title display">DAD & MOM </div>
+  <p class="gate-sub">การ์ดอวยพรใบนี้ตั้งใจทำให้<br>แตะปุ่มด้านล่างเพื่อเปิดการ์ดกันเลย</p>
+  <button id="openBtn">🎁 แตะเพื่อเปิดการ์ด</button>
+</div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<div id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-decor" id="heroDecor"></div>
+    <div class="eyebrow">Happy Birthday</div>
+    <h1>สุขสันต์วันเกิด</h1>
+    <div class="names">พ่อ &amp; แม่ </div>
+    <p class="desc">ขอบคุณที่เป็นฟ้าที่ปกป้อง เป็นแดดที่อบอุ่น และเป็นบ้านที่พร้อมต้อนรับเสมอ<br>ขอให้วันนี้เป็นวันที่มีแต่รอยยิ้มนะครับ</p>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section reveal" id="gallery-section">
+    <div class="section-head">
+      <div class="eyebrow">Memories</div>
+      <h2>ภาพความทรงจำของเรา</h2>
+    </div>
+    <div class="gallery">
+      <div class="frame big">
+  <video src="hbd-vdo.mp4" autoplay muted loop playsinline style="display:block; width:100%; height:100%; object-fit:cover;"></video>
+      </div>
+      <div class="frame"><img src="2.jpg" alt="รูปพ่อแม่" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+      <div class="frame"><img src="3.jpg" alt="รูปพ่อแม่" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+      <div class="frame"><img src="5.jpg" alt="รูปพ่อแม่" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+      <div class="frame"><img src="4.jpg" alt="รูปพ่อแม่" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+    </div>
+  </section>
+
+  <!-- WISH CARD -->
+  <section class="section reveal" id="wish-section">
+    <div class="section-head">
+      <div class="eyebrow">From the heart</div>
+      <h2>คำอวยพรจากใจ</h2>
+    </div>
+    <div class="wish-card">
+      <p class="wish-text">สุขสันต์วันเกิดครับ 
+
+ขอบคุณสำหรับทุกความรัก ทุกความเหนื่อย และทุกกำลังใจที่มอบให้มาตลอด
+วันนี้ขอให้เป็นวันของพ่อกับแม่จริงๆ ขอให้มีความสุข สุขภาพแข็งแรง
+และยิ้มได้ทุกวันเหมือนที่พ่อกับแม่มอบรอยยิ้มนั้นให้ลูกเสมอมา 
+อยู่กับลูกไปนานๆ นะครับ รักพ่อกับแม่มากที่สุดนะครับ 💙</p>
+      <div class="wish-sign">— ด้วยรักจากลูก</div>
+    </div>
+  </section>
+
+
+  <!-- CAKE / CANDLE -->
+  <section class="section reveal" id="cakeSection">
+    <div class="section-head">
+      <div class="eyebrow">Make a wish</div>
+      <h2>ขอพรก่อนเป่าเทียน</h2>
+    </div>
+    <div class="cake-wrap">
+      <div class="cake-svg-holder">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="30" rx="6" ry="9" fill="#f3c465" class="flame" id="flame"/>
+          <rect x="95" y="35" width="10" height="22" fill="#fff" />
+          <rect x="55" y="60" width="90" height="45" rx="8" fill="#a9d3ea"/>
+          <rect x="55" y="105" width="90" height="55" rx="10" fill="#dff1fc" stroke="#a9d3ea" stroke-width="2"/>
+          <rect x="45" y="150" width="110" height="20" rx="10" fill="#f6c9d2"/>
+          <circle cx="75" cy="80" r="4" fill="#fff"/>
+          <circle cx="100" cy="85" r="4" fill="#fff"/>
+          <circle cx="125" cy="80" r="4" fill="#fff"/>
+        </svg>
+      </div>
+      <button id="blowBtn">🕯️ เป่าเทียนและขอพร</button>
+      <div id="wishResult">พรลอยขึ้นสู่ฟ้าแล้ว ✨ ขอให้เป็นจริงนะครับ</div>
+    </div>
+  </section>
+
+  <footer>
+    ทำด้วยความรัก <span class="heart">♡</span> เพื่อคุณพ่อและคุณแม่
+  </footer>
+</div>
+
+<!-- MUSIC -->
+<!-- แทนที่ song.mp3 ด้วยไฟล์เพลงของคุณ แล้ววางไฟล์ไว้โฟลเดอร์เดียวกับ HTML นี้ -->
+<audio id="bgm" loop>
+  <source src="Love.mp3" type="audio/mpeg">
+</audio>
+<button id="musicToggle" aria-label="เปิด/ปิดเพลง">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect class="bar" x="4" y="9" width="3" height="6" rx="1.5" fill="#5fa8d3"/>
+    <rect class="bar" x="10.5" y="5" width="3" height="14" rx="1.5" fill="#5fa8d3" style="animation-delay:.2s"/>
+    <rect class="bar" x="17" y="8" width="3" height="8" rx="1.5" fill="#5fa8d3" style="animation-delay:.4s"/>
+  </svg>
+</button>
+
+<script>
+  // ---- Decorative clouds & balloons in hero ----
+  const heroDecor = document.getElementById('heroDecor');
+  const balloonColors = ['#f6c9d2','#f3c465','#a9d3ea','#cfe9f7'];
+  for(let i=0;i<6;i++){
+    const b = document.createElement('div');
+    b.className = 'hero-balloon';
+    b.style.left = (8 + i*15) + '%';
+    b.style.top = (10 + (i%3)*18) + '%';
+    b.style.background = balloonColors[i % balloonColors.length];
+    b.style.animationDelay = (i*0.6)+'s';
+    heroDecor.appendChild(b);
+  }
+  for(let i=0;i<3;i++){
+    const c = document.createElement('div');
+    c.className='cloud-drift';
+    c.style.width = (70+i*30)+'px';
+    c.style.height = (24+i*8)+'px';
+    c.style.top = (8+i*22)+'%';
+    c.style.left = (i%2===0 ? '-10%' : '60%');
+    heroDecor.appendChild(c);
+  }
+
+  // ---- Gate open + start music ----
+  const gate = document.getElementById('gate');
+  const openBtn = document.getElementById('openBtn');
+  const bgm = document.getElementById('bgm');
+  const musicToggle = document.getElementById('musicToggle');
+
+  openBtn.addEventListener('click', () => {
+    gate.classList.add('hidden');
+    bgm.volume = 0.2;
+    bgm.play().catch(()=>{ musicToggle.classList.add('paused'); });
+    document.querySelectorAll('.reveal').forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('visible'), 200*i);
+    });
+  });
+
+  musicToggle.addEventListener('click', () => {
+    if(bgm.paused){ bgm.play(); musicToggle.classList.remove('paused'); }
+    else { bgm.pause(); musicToggle.classList.add('paused'); }
+  });
+
+  // ---- Scroll reveal ----
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold:0.15 });
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  // ---- Candle blow + confetti ----
+  const blowBtn = document.getElementById('blowBtn');
+  const flame = document.getElementById('flame');
+  const wishResult = document.getElementById('wishResult');
+  const confettiColors = ['#f6c9d2','#f3c465','#a9d3ea','#cfe9f7','#ffffff'];
+
+  blowBtn.addEventListener('click', () => {
+    flame.classList.add('out');
+    wishResult.classList.add('show');
+    for(let i=0;i<40;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = 6 + Math.random()*6;
+      piece.style.width = size+'px';
+      piece.style.height = size+'px';
+      piece.style.left = Math.random()*100+'vw';
+      piece.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+      piece.style.opacity = 0.9;
+      document.body.appendChild(piece);
+      const duration = 2200 + Math.random()*1800;
+      const drift = (Math.random()-0.5)*160;
+      piece.animate([
+        { transform:'translate(0,0) rotate(0deg)', opacity:1 },
+        { transform:`translate(${drift}px, 100vh) rotate(${360+Math.random()*360}deg)`, opacity:0.2 }
+      ], { duration, easing:'ease-in' });
+      setTimeout(()=>piece.remove(), duration);
+    }
+  });
+</script>
+
+<!--
+  ============================================
+  วิธีใส่รูป วิดีโอ และเพลงของคุณเอง
+  ============================================
+  1) รูปภาพ: เปิดไฟล์นี้ด้วยโปรแกรมแก้ไขข้อความ ค้นหา class="frame"
+     แล้วเพิ่ม <img src="ชื่อไฟล์รูป.jpg" alt="คำอธิบายรูป"> ไว้ข้างในกล่อง frame ที่ต้องการ
+     ตัวอย่าง:
+     <div class="frame big">
+       <img src="photo1.jpg" alt="ครอบครัว">
+     </div>
+     แล้วเพิ่ม CSS นี้ (ถ้ายังไม่มี) เพื่อให้รูปเต็มกรอบ: .frame img{ display:block; }
+
+  2) วิดีโอ: ใช้ <video src="clip.mp4" controls muted playsinline></video> แทน <img> ได้เลย
+
+  3) เพลง: นำไฟล์เพลง (เช่น song.mp3) ไปวางในโฟลเดอร์เดียวกับไฟล์ HTML นี้
+     ระบบจะเล่นเพลงอัตโนมัติทันทีที่ผู้ใช้กดปุ่ม "แตะเพื่อเปิดการ์ด"
+     (เบราว์เซอร์ส่วนใหญ่ไม่อนุญาตให้เล่นเพลงเองโดยไม่มีการคลิกก่อน จึงออกแบบปุ่มเปิดการ์ดไว้ให้)
+
+  4) แก้ไขข้อความคำอวยพร: ค้นหา class="wish-text" แล้วแก้ข้อความในนั้นได้เลย
+-->
+</body>
+</html>
